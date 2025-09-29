@@ -3,135 +3,145 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Jadwal & Pengumuman</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Papan Jadwal Digital</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #003c7d, #007bff);
-      color: #333;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
     header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(0, 60, 125, 0.9);
+      background: #003366;
       color: white;
       padding: 10px 20px;
-    }
-    header img {
-      height: 50px;
-      margin-right: 15px;
-    }
-    .title {
       display: flex;
+      justify-content: space-between;
       align-items: center;
     }
-    h2 {
+    header img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    header h1 {
+      font-size: 20px;
       margin: 0;
     }
-    .clock {
-      font-size: 22px;
+    #clock {
+      font-size: 20px;
       font-weight: bold;
+    }
+    #date {
+      font-size: 14px;
+    }
+    main {
+      flex: 1;
+      padding: 20px;
+      overflow: hidden;
     }
     table {
-      width: 95%;
-      margin: 20px auto;
+      width: 100%;
       border-collapse: collapse;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    table.visible {
+      opacity: 1;
     }
     th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
+      border: 1px solid #ccc;
+      padding: 8px;
       text-align: center;
-      font-size: 18px;
     }
     th {
-      background: #0056b3;
+      background: #003366;
       color: white;
     }
-    tr:nth-child(even) {
-      background: #f2f2f2;
-    }
-    .running-text {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: rgba(0, 60, 125, 0.9);
-      color: white;
-      font-size: 22px;
+    footer {
+      background: #003366;
+      color: yellow;
+      padding: 10px;
+      text-align: center;
       font-weight: bold;
-      white-space: nowrap;
-      overflow: hidden;
-      padding: 8px 0;
-    }
-    .running-text span {
-      display: inline-block;
-      padding-left: 100%;
-      animation: scroll-left 20s linear infinite;
-    }
-    @keyframes scroll-left {
-      0%   { transform: translateX(0%); }
-      100% { transform: translateX(-100%); }
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
-  <!-- Header dengan logo & jam -->
   <header>
-    <div class="title">
-      <img src="logo.png" alt="Logo">
-      <h2>Jadwal Penggunaan Ruangan</h2>
+    <div style="display:flex;align-items:center;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Logo">
+      <h1>Jadwal Penggunaan Ruangan</h1>
     </div>
-    <div class="clock" id="clock">00:00:00</div>
+    <div style="text-align:right;">
+      <div id="clock"></div>
+      <div id="date"></div>
+    </div>
   </header>
 
-  <!-- Tabel jadwal -->
-  <table id="jadwal">
-    <thead>
-      <tr>
-        <th>Tanggal</th>
-        <th>Jam</th>
-        <th>Acara</th>
-        <th>Ruang</th>
-        <th>PIC</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td colspan="5">Memuat data...</td></tr>
-    </tbody>
-  </table>
+  <main>
+    <table id="jadwal">
+      <thead>
+        <tr>
+          <th>Hari</th>
+          <th>Jam</th>
+          <th>Kegiatan</th>
+          <th>Ruangan</th>
+          <th>Penanggung Jawab</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
 
-  <!-- Running text pengumuman -->
-  <div class="running-text">
-    <span id="pengumuman">Memuat pengumuman...</span>
-  </div>
+  <footer id="pengumuman">Memuat pengumuman...</footer>
 
   <script>
+    // === LINK GOOGLE SHEET ===
     const urlJadwal = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=0&single=true&output=csv";
     const urlPengumuman = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=563346649&single=true&output=csv";
 
     let allRows = [];
     let currentPage = 0;
     const rowsPerPage = 10;
+    const slideInterval = 5000; // 5 detik
 
-    function renderPage() {
+    function renderTablePage() {
+      let table = document.querySelector("#jadwal");
       let tbody = document.querySelector("#jadwal tbody");
       tbody.innerHTML = "";
+
+      if (allRows.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='5'>Tidak ada data</td></tr>";
+        return;
+      }
+
       let start = currentPage * rowsPerPage;
-      let pageRows = allRows.slice(start, start + rowsPerPage);
+      let end = start + rowsPerPage;
+      let pageRows = allRows.slice(start, end);
+
       pageRows.forEach(r => {
+        if (r.trim() === "") return;
+        let cols = r.split(",");
         let tr = document.createElement("tr");
-        r.slice(0,5).forEach(c => {
+        cols.forEach(c => {
           let td = document.createElement("td");
-          td.textContent = c.trim();
+          td.textContent = c;
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
       });
+
+      // animasi fade
+      table.classList.remove("visible");
+      setTimeout(() => { table.classList.add("visible"); }, 50);
+
+      // geser halaman
       currentPage = (currentPage + 1) % Math.ceil(allRows.length / rowsPerPage);
     }
 
@@ -139,17 +149,13 @@
       fetch(urlJadwal)
         .then(res => res.text())
         .then(data => {
-          let rows = data.split("\n").map(r => r.split(","));
-          allRows = rows.slice(1).filter(r => r.length >= 5);
-          if (allRows.length === 0) {
-            document.querySelector("#jadwal tbody").innerHTML = "<tr><td colspan='5'>Tidak ada data</td></tr>";
-            return;
-          }
+          allRows = data.split("\n").slice(1); // skip header
           currentPage = 0;
-          renderPage();
+          renderTablePage();
         })
         .catch(err => {
-          document.querySelector("#jadwal tbody").innerHTML = "<tr><td colspan='5'>Gagal memuat data</td></tr>";
+          document.querySelector("#jadwal tbody").innerHTML =
+            "<tr><td colspan='5'>Gagal memuat data</td></tr>";
           console.error(err);
         });
     }
@@ -158,12 +164,14 @@
       fetch(urlPengumuman)
         .then(res => res.text())
         .then(data => {
-          let rows = data.split("\n").slice(1);
-          let teks = rows.map(r => r.split(",")[0]).join("  •  ");
-          document.getElementById("pengumuman").textContent = teks || "Tidak ada pengumuman.";
+          let rows = data.split("\n").slice(1); // skip header
+          let teks = rows.map(r => r.split(",")[0]).join(" • ");
+          document.getElementById("pengumuman").textContent =
+            teks || "Tidak ada pengumuman.";
         })
         .catch(err => {
-          document.getElementById("pengumuman").textContent = "Gagal memuat pengumuman.";
+          document.getElementById("pengumuman").textContent =
+            "Gagal memuat pengumuman.";
           console.error(err);
         });
     }
@@ -174,28 +182,24 @@
       const m = String(now.getMinutes()).padStart(2, '0');
       const s = String(now.getSeconds()).padStart(2, '0');
       document.getElementById("clock").textContent = `${h}:${m}:${s}`;
+
+      const hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+      const bulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli",
+                     "Agustus","September","Oktober","November","Desember"];
+      const tgl = now.getDate();
+      const bln = bulan[now.getMonth()];
+      const thn = now.getFullYear();
+      document.getElementById("date").textContent =
+        `${hari[now.getDay()]}, ${tgl} ${bln} ${thn}`;
     }
 
-    // Jalankan pertama kali
+    // jalankan
     loadJadwal();
     loadPengumuman();
-    updateClock();
-
-    // Auto refresh data tiap 1 menit
-    setInterval(() => {
-      loadJadwal();
-      loadPengumuman();
-    }, 60000);
-
-    // Ganti halaman tiap 10 detik
-    setInterval(() => {
-      if (allRows.length > rowsPerPage) {
-        renderPage();
-      }
-    }, 10000);
-
-    // Update jam tiap 1 detik
+    setInterval(loadJadwal, 60000);
+    setInterval(loadPengumuman, 60000);
     setInterval(updateClock, 1000);
+    setInterval(renderTablePage, slideInterval);
   </script>
 </body>
 </html>
