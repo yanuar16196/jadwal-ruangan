@@ -25,6 +25,11 @@
       height: auto;
       margin-right: 15px;
     }
+    .table-container {
+    padding: 5px;            /* lebih kecil supaya tabel naik */
+    margin-top: -20px;       /* geser tabel ke atas */
+    }
+
 
     .title-container {
       display: flex;
@@ -57,22 +62,33 @@
     }
 
     table {
-      width: 95%;
-      margin: 20px auto;
+      width: 100%;
+      margin: 0px auto;
       border-collapse: collapse;
       background-color: rgba(0, 0, 0, 0.8);
     }
 
     th, td {
       border: 1px solid #ddd;
-      padding: 10px;
+      padding: 16px 12px;
       text-align: center;
+      font-size:20px;
     }
 
     th {
       background-color: rgba(0, 51, 102, 0.9);
+      font-size:22px;
+      font-weight:bold;
       color: white;
     }
+    td {
+    background: rgba(0, 0, 0, 0.65);
+}
+
+tr:nth-child(even) td {
+    background: rgba(0, 0, 0, 0.75);
+}
+
 
     .footer {
       text-align: center;
@@ -147,4 +163,5 @@
   </script>
 </body>
 </html>
+
 
