@@ -7,95 +7,116 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f6f9;
       margin: 0;
-      padding: 0;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
       display: flex;
       flex-direction: column;
       height: 100vh;
     }
-    .subjudul {
-    font-size: 16px;
-    font-weight: normal;
-    margin: 0;
-    color: #f0f0f0; /* putih agak lembut */
+    .logo {
+  width: 150px;   /* ubah sesuai kebutuhan, misalnya 120px atau 150px */
+  height: auto;
 }
     header {
-      background: #003366;
+      background: rgba(0, 51, 102, 0.8);
       color: white;
-      padding: 10px 20px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
+      padding: 15px 25px;
+    }
+    header .left {
+      display: flex;
       align-items: center;
     }
     header img {
-      height: 40px;
-      margin-right: 10px;
+      height: 80px;
+      margin-right: 15px;
     }
     header h1 {
-      font-size: 20px;
       margin: 0;
+      font-size: 28px;
+    }
+    header h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: normal;
+      color: #cce0ff;
     }
     #clock {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: bold;
-    }
-    #date {
-      font-size: 14px;
+      text-align: right;
     }
     main {
       flex: 1;
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       overflow: hidden;
+      background: rgba(0,0,0,0.5);
+      margin: 15px;
+      border-radius: 10px;
     }
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 10px;
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-    }
-    table.visible {
-      opacity: 1;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-    }
-    th {
-      background: #003366;
-      color: white;
-    }
-    footer {
-      background: #003366;
+  width: 100%;              /* penuh satu layar */
+  border-collapse: collapse;
+  background: transparent;
+  margin: 0;                /* hapus margin */
+}
+
+th, td {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px;
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+}
+
+th {
+  background: rgba(0, 51, 102, 0.9);
+  font-size: 20px;
+}
+
+tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+tr:nth-child(odd) {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+
+    #pengumuman {
+      background: rgba(0,0,0,0.8);
       color: yellow;
-      padding: 10px;
       text-align: center;
+      font-size: 26px;
       font-weight: bold;
-      font-size: 18px;
+      padding: 15px;
+      margin-top: auto;
     }
   </style>
 </head>
 <body>
   <header>
-    <div style="display:flex;align-items:center;">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Logo">
+    <div class="left">
+      <img src="paroki.png" alt="Logo">
       <div>
-      <h1>Jadwal Penggunaan Ruangan</h1>
-       <p class="subjudul">Paroki Santa Maria Assumpta Klaten</p>
+        <h1>Jadwal Penggunaan Ruangan</h1>
+        <h2>Paroki Santa Maria Assumpta Klaten</h2>
+      </div>
     </div>
-    </div>
-    <div style="text-align:right;">
-      <div id="clock"></div>
-      <div id="date"></div>
-    </div>
+    <div id="clock"></div>
   </header>
 
   <main>
     <table id="jadwal">
       <thead>
         <tr>
+          <th>Tanggal</th>
           <th>Hari</th>
           <th>Jam</th>
           <th>Kegiatan</th>
@@ -103,83 +124,87 @@
           <th>Penanggung Jawab</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody>
+        <tr><td colspan="6">Memuat data...</td></tr>
+      </tbody>
     </table>
   </main>
 
-  <footer id="pengumuman">Memuat pengumuman...</footer>
+  <div id="pengumuman">Memuat pengumuman...</div>
 
   <script>
-    // === LINK GOOGLE SHEET ===
     const urlJadwal = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=0&single=true&output=csv";
     const urlPengumuman = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=563346649&single=true&output=csv";
 
-    let allRows = [];
+    let jadwalData = [];
     let currentPage = 0;
     const rowsPerPage = 10;
-    const slideInterval = 5000; // 5 detik
 
-    function renderTablePage() {
-      let table = document.querySelector("#jadwal");
-      let tbody = document.querySelector("#jadwal tbody");
-      tbody.innerHTML = "";
-
-      if (allRows.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='5'>Tidak ada data</td></tr>";
-        return;
+    function getHari(d) {
+      if (!d || d.trim() === "") return "";
+      let date;
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(d.trim())) {
+        const [day, month, year] = d.trim().split("/");
+        date = new Date(`${year}-${month}-${day}`);
+      } else {
+        date = new Date(d);
       }
-
-      let start = currentPage * rowsPerPage;
-      let end = start + rowsPerPage;
-      let pageRows = allRows.slice(start, end);
-
-      pageRows.forEach(r => {
-        if (r.trim() === "") return;
-        let cols = r.split(",");
-        let tr = document.createElement("tr");
-        cols.forEach(c => {
-          let td = document.createElement("td");
-          td.textContent = c;
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-      });
-
-      // animasi fade
-      table.classList.remove("visible");
-      setTimeout(() => { table.classList.add("visible"); }, 50);
-
-      // geser halaman
-      currentPage = (currentPage + 1) % Math.ceil(allRows.length / rowsPerPage);
+      if (isNaN(date)) return "";
+      return date.toLocaleDateString("id-ID", { weekday: "long" });
     }
 
     function loadJadwal() {
       fetch(urlJadwal)
         .then(res => res.text())
         .then(data => {
-          allRows = data.split("\n").slice(1); // skip header
+          jadwalData = data.split("\n").slice(1).map(r => r.split(","));
           currentPage = 0;
-          renderTablePage();
+          showPage();
         })
         .catch(err => {
-          document.querySelector("#jadwal tbody").innerHTML =
-            "<tr><td colspan='5'>Gagal memuat data</td></tr>";
+          document.querySelector("#jadwal tbody").innerHTML = "<tr><td colspan='6'>Gagal memuat data</td></tr>";
           console.error(err);
         });
+    }
+
+    function showPage() {
+      if (jadwalData.length === 0) return;
+      let start = currentPage * rowsPerPage;
+      let end = start + rowsPerPage;
+      let pageData = jadwalData.slice(start, end);
+
+      let html = pageData.map(cols => {
+        const tanggal = cols[0];
+        const hari = getHari(tanggal);
+        return `
+          <tr>
+            <td>${tanggal}</td>
+            <td>${hari}</td>
+            <td>${cols[1]}</td>
+            <td>${cols[2]}</td>
+            <td>${cols[3]}</td>
+            <td>${cols[4]}</td>
+          </tr>`;
+      }).join("");
+
+      document.querySelector("#jadwal tbody").innerHTML = html;
+
+      currentPage++;
+      if (start + rowsPerPage >= jadwalData.length) {
+        currentPage = 0;
+      }
     }
 
     function loadPengumuman() {
       fetch(urlPengumuman)
         .then(res => res.text())
         .then(data => {
-          let rows = data.split("\n").slice(1); // skip header
-          let teks = rows.map(r => r.split(",")[0]).join(" • ");
-          document.getElementById("pengumuman").textContent =
-            teks || "Tidak ada pengumuman.";
+          let rows = data.split("\n").slice(1);
+          let text = rows.map(r => r.split(",")[0]).join(" • ");
+          document.getElementById("pengumuman").textContent = text || "Tidak ada pengumuman";
         })
         .catch(err => {
-          document.getElementById("pengumuman").textContent =
-            "Gagal memuat pengumuman.";
+          document.getElementById("pengumuman").textContent = "Gagal memuat pengumuman";
           console.error(err);
         });
     }
@@ -189,38 +214,20 @@
       const h = String(now.getHours()).padStart(2, '0');
       const m = String(now.getMinutes()).padStart(2, '0');
       const s = String(now.getSeconds()).padStart(2, '0');
-      document.getElementById("clock").textContent = `${h}:${m}:${s}`;
-
-      const hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-      const bulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli",
-                     "Agustus","September","Oktober","November","Desember"];
-      const tgl = now.getDate();
-      const bln = bulan[now.getMonth()];
-      const thn = now.getFullYear();
-      document.getElementById("date").textContent =
-        `${hari[now.getDay()]}, ${tgl} ${bln} ${thn}`;
+      const hari = now.toLocaleDateString("id-ID", { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById("clock").innerHTML = `${h}:${m}:${s}<br>${hari}`;
     }
 
-    // jalankan
+    // Jalankan awal
     loadJadwal();
     loadPengumuman();
-    setInterval(loadJadwal, 60000);
-    setInterval(loadPengumuman, 60000);
+    updateClock();
     setInterval(updateClock, 1000);
-    setInterval(renderTablePage, slideInterval);
+    setInterval(showPage, 5000);
+    setInterval(loadPengumuman, 60000);
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
 
 
 
