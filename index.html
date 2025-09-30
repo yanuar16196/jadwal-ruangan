@@ -2,150 +2,226 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jadwal Penggunaan Ruangan</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: url('background.png') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: rgba(0, 51, 102, 0.9);
-      padding: 10px 20px;
-    }
-
-    .logo {
-      width: 100px; /* ukuran logo besar */
-      height: auto;
-      margin-right: 15px;
-    }
-
-    .title-container {
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
+      height: 100vh;
     }
-
-    .title-container h1 {
+    .subjudul {
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0;
+    color: #f0f0f0; /* putih agak lembut */
+}
+    header {
+      background: #003366;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    header h1 {
+      font-size: 20px;
       margin: 0;
-      font-size: 26px;
+    }
+    #clock {
+      font-size: 20px;
       font-weight: bold;
     }
-
-    .title-container h2 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: normal;
-    }
-
-    .datetime {
-      text-align: right;
-    }
-
-    .datetime .time {
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .datetime .date {
+    #date {
       font-size: 14px;
     }
-
-    table {
-      width: 95%;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background-color: rgba(0, 0, 0, 0.8);
+    main {
+      flex: 1;
+      padding: 20px;
+      overflow: hidden;
     }
-
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    table.visible {
+      opacity: 1;
+    }
     th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
+      border: 1px solid #ccc;
+      padding: 8px;
       text-align: center;
     }
-
     th {
-      background-color: rgba(0, 51, 102, 0.9);
+      background: #003366;
       color: white;
     }
-
-    .footer {
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
+    footer {
+      background: #003366;
       color: yellow;
-      margin: 20px 0;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
   <header>
-    <div style="display:flex; align-items:center;">
-      <img src="logo.png" alt="Logo" class="logo">
-      <div class="title-container">
-        <h1>Jadwal Penggunaan Ruangan</h1>
-        <h2>Paroki Santa Maria Assumpta Klaten</h2>
-      </div>
+    <div style="display:flex;align-items:center;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Logo">
+      <div>
+      <h1>Jadwal Penggunaan Ruangan</h1>
+       <p class="subjudul">Paroki Santa Maria Assumpta Klaten</p>
     </div>
-    <div class="datetime">
-      <div class="time" id="clock">--:--:--</div>
-      <div class="date" id="date">Hari, DD MMMM YYYY</div>
+    </div>
+    <div style="text-align:right;">
+      <div id="clock"></div>
+      <div id="date"></div>
     </div>
   </header>
 
-  <table>
-    <tr>
-      <th>Tanggal</th>
-      <th>Hari</th>
-      <th>Jam</th>
-      <th>Kegiatan</th>
-      <th>Ruangan</th>
-      <th>Penanggung Jawab</th>
-    </tr>
-    <tr>
-      <td>01/10/2025</td><td>Rabu</td><td>18:00</td><td>Pembelajaran KEP OMK</td><td>Aula</td><td>P. Aji</td>
-    </tr>
-    <tr>
-      <td>02/10/2025</td><td>Kamis</td><td>11:00</td><td>PEC</td><td>Aula</td><td>Mb. Ludvi</td>
-    </tr>
-    <!-- tambahkan baris lain di sini -->
-  </table>
+  <main>
+    <table id="jadwal">
+      <thead>
+        <tr>
+          <th>Hari</th>
+          <th>Jam</th>
+          <th>Kegiatan</th>
+          <th>Ruangan</th>
+          <th>Penanggung Jawab</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
 
-  <div class="footer">
-    Pemesanan Ruangan Hubungi Mbak Sari (0851 6147 0021)
-  </div>
+  <footer id="pengumuman">Memuat pengumuman...</footer>
 
   <script>
-    function updateClock() {
-      const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-      const months = [
-        "Januari","Februari","Maret","April","Mei","Juni",
-        "Juli","Agustus","September","Oktober","November","Desember"
-      ];
+    // === LINK GOOGLE SHEET ===
+    const urlJadwal = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=0&single=true&output=csv";
+    const urlPengumuman = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=563346649&single=true&output=csv";
 
+    let allRows = [];
+    let currentPage = 0;
+    const rowsPerPage = 10;
+    const slideInterval = 5000; // 5 detik
+
+    function renderTablePage() {
+      let table = document.querySelector("#jadwal");
+      let tbody = document.querySelector("#jadwal tbody");
+      tbody.innerHTML = "";
+
+      if (allRows.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='5'>Tidak ada data</td></tr>";
+        return;
+      }
+
+      let start = currentPage * rowsPerPage;
+      let end = start + rowsPerPage;
+      let pageRows = allRows.slice(start, end);
+
+      pageRows.forEach(r => {
+        if (r.trim() === "") return;
+        let cols = r.split(",");
+        let tr = document.createElement("tr");
+        cols.forEach(c => {
+          let td = document.createElement("td");
+          td.textContent = c;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+
+      // animasi fade
+      table.classList.remove("visible");
+      setTimeout(() => { table.classList.add("visible"); }, 50);
+
+      // geser halaman
+      currentPage = (currentPage + 1) % Math.ceil(allRows.length / rowsPerPage);
+    }
+
+    function loadJadwal() {
+      fetch(urlJadwal)
+        .then(res => res.text())
+        .then(data => {
+          allRows = data.split("\n").slice(1); // skip header
+          currentPage = 0;
+          renderTablePage();
+        })
+        .catch(err => {
+          document.querySelector("#jadwal tbody").innerHTML =
+            "<tr><td colspan='5'>Gagal memuat data</td></tr>";
+          console.error(err);
+        });
+    }
+
+    function loadPengumuman() {
+      fetch(urlPengumuman)
+        .then(res => res.text())
+        .then(data => {
+          let rows = data.split("\n").slice(1); // skip header
+          let teks = rows.map(r => r.split(",")[0]).join(" • ");
+          document.getElementById("pengumuman").textContent =
+            teks || "Tidak ada pengumuman.";
+        })
+        .catch(err => {
+          document.getElementById("pengumuman").textContent =
+            "Gagal memuat pengumuman.";
+          console.error(err);
+        });
+    }
+
+    function updateClock() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
       const m = String(now.getMinutes()).padStart(2, '0');
       const s = String(now.getSeconds()).padStart(2, '0');
-
-      const dayName = days[now.getDay()];
-      const day = String(now.getDate()).padStart(2, '0');
-      const monthName = months[now.getMonth()];
-      const year = now.getFullYear();
-
       document.getElementById("clock").textContent = `${h}:${m}:${s}`;
-      document.getElementById("date").textContent = `${dayName}, ${day} ${monthName} ${year}`;
+
+      const hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+      const bulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli",
+                     "Agustus","September","Oktober","November","Desember"];
+      const tgl = now.getDate();
+      const bln = bulan[now.getMonth()];
+      const thn = now.getFullYear();
+      document.getElementById("date").textContent =
+        `${hari[now.getDay()]}, ${tgl} ${bln} ${thn}`;
     }
 
+    // jalankan
+    loadJadwal();
+    loadPengumuman();
+    setInterval(loadJadwal, 60000);
+    setInterval(loadPengumuman, 60000);
     setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(renderTablePage, slideInterval);
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
