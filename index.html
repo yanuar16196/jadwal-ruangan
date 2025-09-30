@@ -1,365 +1,260 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Jadwal Penggunaan Ruangan - Paroki</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadwal Penggunaan Ruangan</title>
   <style>
-    :root{
-      --header-bg: #0e4a7a;
-      --header-accent: rgba(255,255,255,0.12);
-      --table-header: rgba(2,57,107,0.95);
-      --cell-dark: rgba(0,0,0,0.66);
-      --cell-dark-2: rgba(0,0,0,0.78);
-      --accent-yellow: #ffea00;
-    }
-
-    html,body{height:100%;margin:0;font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial; color:#fff;background:#111;}
-    body{
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
       background: url('background.png') no-repeat center center fixed;
       background-size: cover;
-      display:flex;
-      flex-direction:column;
-      min-height:100vh;
-      box-sizing:border-box;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
 
-    /* HEADER */
-    header{
-      background: linear-gradient(180deg,var(--header-bg), #0b3f63);
-      padding:12px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      position:relative;
-      box-shadow: 0 2px 0 rgba(0,0,0,0.25);
-    }
-    .left {
-      display:flex; align-items:center; gap:14px;
-    }
-    .logo{
-      height:180px !important;
-      width:auto !important;
-      display:block;
-   
-    }
-    .title {
-      line-height:1;
-    }
-    h1{
-      margin:0; font-size:40px; font-weight:700;
-      text-shadow: 0 1px 0 rgba(0,0,0,0.6);
-    }
-    .subtitle{ margin:3px 0 0; font-size:25px; color:#d6e7ff; opacity:0.95; }
-
-    /* clock */
-    #clock{
-      text-align:right;
-      font-weight:700;
-      font-size:18px;
-      min-width:220px;
-      color:#fff;
-    }
-    #clock .date{ font-weight:400; font-size:13px; color:#dbeeff; display:block; margin-top:4px; }
-
-    /* table container - sedikit naik */
-    .table-container{
-      margin:10px 18px 0 18px;
-      padding-top:8px;
-      border-radius:8px;
-      overflow:hidden;
-      /* optional overlay to make table readable on bright backgrounds */
+    /* HEADER RAMPING */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 25px;   /* lebih kecil dari sebelumnya */
+      background: linear-gradient(to bottom, #0d4d7d, #063a5c);
+      color: white;
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      margin:0;
-      table-layout:fixed;
-      color:#fff;
-      font-size:20px; /* isi tabel lebih besar */
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img {
+      height: 120px !important;   /* logo besar tapi tidak terlalu makan layar */
+      width: auto !important;
+      margin-right: 20px;
+    }
+
+    .header-left-text h1 {
+      font-size: 48px !important; /* judul besar */
+      margin: 0;
+    }
+
+    .header-left-text h2 {
+      font-size: 26px !important; /* subjudul */
+      margin: 0;
+      font-weight: normal;
+      color: #cce0ff;
+    }
+
+    .header-right {
+      text-align: right;
+    }
+
+    .header-right .clock {
+      font-size: 48px !important; /* jam besar */
+      font-weight: bold;
+    }
+
+    .header-right .date {
+      font-size: 24px !important; /* tanggal */
+    }
+
+    /* MAIN TABLE */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+      background: rgba(0,0,0,0.5);
+      margin: 15px;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
       background: transparent;
-    }
-    thead th{
-      position:sticky; top:0;
-      z-index:2;
-      background: var(--table-header);
-      padding:18px 12px;
-      font-size:22px;
-      font-weight:700;
-      border-bottom:2px solid rgba(255,255,255,0.06);
-    }
-    tbody td{
-      padding:18px 12px;
-      border-left: 1px solid rgba(255,255,255,0.03);
-      border-right: 1px solid rgba(0,0,0,0.05);
-      font-size:20px;
-      vertical-align:middle;
+      margin: 0;
     }
 
-    /* strip gelap / transparan */
-    tbody tr:nth-child(odd) td{
-      background: var(--cell-dark);
-    }
-    tbody tr:nth-child(even) td{
-      background: var(--cell-dark-2);
-    }
-
-    /* rounded corners at table top/bottom */
-    .table-wrapper{
-      border-radius:10px;
-      overflow:hidden;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-      border:4px solid rgba(255,255,255,0.02);
+    th, td {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 12px;
+      text-align: center;
+      color: #fff;
+      font-size: 18px;
     }
 
-    /* footer running text */
-    .footer-note{
-      margin-top:auto; /* tekan ke bawah layar */
-      background: rgba(0,0,0,0.85);
-      color: var(--accent-yellow);
-      font-weight:800;
-      font-size:24px;
-      text-align:center;
-      padding:12px 8px;
-      letter-spacing:0.6px;
+    th {
+      background: rgba(0, 51, 102, 0.9);
+      font-size: 20px;
     }
 
-    /* small view adjustments */
-    @media (max-width:900px){
-      h1{font-size:20px}
-      .subtitle{font-size:12px}
-      #clock{font-size:14px}
-      thead th{font-size:16px;padding:12px}
-      tbody td{font-size:14px;padding:10px}
-      .logo{max-width:22vw;height:auto}
+    tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.1);
     }
 
+    tr:nth-child(odd) {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    /* PENGUMUMAN */
+    #pengumuman {
+      background: rgba(0,0,0,0.8);
+      color: yellow;
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+      padding: 15px;
+      margin-top: auto;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="left">
-      <img src="paroki.png" class="logo" alt="Logo Paroki">
-      <div class="title">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <img src="paroki.png" alt="Logo">
+      <div class="header-left-text">
         <h1>Jadwal Penggunaan Ruangan</h1>
-        <div class="subtitle">Paroki Santa Maria Assumpta Klaten</div>
+        <h2>Paroki Santa Maria Assumpta Klaten</h2>
       </div>
     </div>
-
-    <div id="clock">
-      --:--:--<span class="date">Memuat tanggal...</span>
-    </div>
-  </header>
-
-  <div class="table-container">
-    <div class="table-wrapper">
-      <table id="jadwal">
-        <thead>
-          <tr>
-            <th style="width:14%">Tanggal</th>
-            <th style="width:12%">Hari</th>
-            <th style="width:10%">Jam</th>
-            <th style="width:38%">Kegiatan</th>
-            <th style="width:13%">Ruangan</th>
-            <th style="width:13%">Penanggung Jawab</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="6" style="padding:24px; text-align:center;">Memuat data...</td></tr>
-        </tbody>
-      </table>
+    <div class="header-right">
+      <div class="clock" id="clock">00:00:00</div>
+      <div class="date" id="date">Memuat tanggal...</div>
     </div>
   </div>
 
-  <div class="footer-note" id="pengumuman">Memuat pengumuman...</div>
+  <!-- MAIN -->
+  <main>
+    <table id="jadwal">
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Hari</th>
+          <th>Jam</th>
+          <th>Kegiatan</th>
+          <th>Ruangan</th>
+          <th>Penanggung Jawab</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="6">Memuat data...</td></tr>
+      </tbody>
+    </table>
+  </main>
 
-<script>
-/*
-  File index.html ini:
-  - Gunakan logo.png dan background.png di folder yang sama.
-  - Google Sheets CSV links sudah diset sesuai input user.
-*/
+  <!-- PENGUMUMAN -->
+  <div id="pengumuman">Memuat pengumuman...</div>
 
-/* === CONFIG: ganti jika perlu === */
-const urlJadwal = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=0&single=true&output=csv";
-const urlPengumuman = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=563346649&single=true&output=csv";
+  <script>
+    const urlJadwal = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=0&single=true&output=csv";
+    const urlPengumuman = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=563346649&single=true&output=csv";
 
-const rowsPerPage = 10;
-const slideIntervalMs = 8000; // 8 detik per halaman
-let jadwalRows = []; // data array
-let currentPage = 0;
-let slideTimer = null;
+    let jadwalData = [];
+    let currentPage = 0;
+    const rowsPerPage = 10;
 
-/* ===== helper: parse CSV sederhana (meng-handle kutip jika ada) ===== */
-function parseCSV(text){
-  // split lines, ignore empty lines
-  const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
-  const out = [];
-  for(let i=0;i<lines.length;i++){
-    const line = lines[i];
-    const row = [];
-    let cur = "", inQuote=false;
-    for(let j=0;j<line.length;j++){
-      const ch = line[j];
-      if(ch === '"' ){
-        // toggle unless doubled quote
-        if(inQuote && line[j+1] === '"'){ cur += '"'; j++; }
-        else inQuote = !inQuote;
-        continue;
+    function getHari(d) {
+      if (!d || d.trim() === "") return "";
+      let date;
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(d.trim())) {
+        const [day, month, year] = d.trim().split("/");
+        date = new Date(`${year}-${month}-${day}`);
+      } else {
+        date = new Date(d);
       }
-      if(ch === ',' && !inQuote){
-        row.push(cur);
-        cur = "";
-      } else cur += ch;
+      if (isNaN(date)) return "";
+      return date.toLocaleDateString("id-ID", { weekday: "long" });
     }
-    row.push(cur);
-    out.push(row);
-  }
-  return out;
-}
 
-/* ===== helper: baca hari dari tanggal dd/mm/yyyy atau yyyy-mm-dd ===== */
-function getHariFromDateString(s){
-  if(!s) return "";
-  s = s.trim();
-  // dd/mm/yyyy
-  if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)){
-    const [d,m,y] = s.split("/");
-    const date = new Date(`${y}-${m}-${d}`);
-    if(isNaN(date)) return "";
-    return date.toLocaleDateString("id-ID",{weekday:"long"});
-  }
-  // yyyy-mm-dd atau general
-  const d = new Date(s);
-  if(!isNaN(d)) return d.toLocaleDateString("id-ID",{weekday:"long"});
-  return "";
-}
+    function loadJadwal() {
+      fetch(urlJadwal)
+        .then(res => res.text())
+        .then(data => {
+          jadwalData = data.split("\n").slice(1).map(r => r.split(","));
+          currentPage = 0;
+          showPage();
+        })
+        .catch(err => {
+          document.querySelector("#jadwal tbody").innerHTML = "<tr><td colspan='6'>Gagal memuat data</td></tr>";
+          console.error(err);
+        });
+    }
 
-/* ===== render sebuah halaman (slice dari jadwalRows) ===== */
-function renderPage(pageIndex){
-  const tbody = document.querySelector("#jadwal tbody");
-  if(jadwalRows.length === 0){
-    tbody.innerHTML = "<tr><td colspan='6' style='padding:20px;text-align:center'>Tidak ada data</td></tr>";
-    return;
-  }
-  const start = pageIndex * rowsPerPage;
-  const slice = jadwalRows.slice(start, start + rowsPerPage);
-  let html = "";
-  for(const r of slice){
-    // Expect columns: tanggal, jam, acara, ruang, pic (user's sheet order)
-    const tanggal = r[0] || "";
-    const jam = r[1] || "";
-    const acara = r[2] || "";
-    const ruang = r[3] || "";
-    const pic = r[4] || "";
-    const hari = getHariFromDateString(tanggal);
-    html += `<tr>
-      <td>${tanggal}</td>
-      <td>${hari}</td>
-      <td>${jam}</td>
-      <td style="text-align:left; padding-left:18px">${acara}</td>
-      <td>${ruang}</td>
-      <td>${pic}</td>
-    </tr>`;
-  }
-  tbody.innerHTML = html;
-}
+    function showPage() {
+      if (jadwalData.length === 0) return;
+      let start = currentPage * rowsPerPage;
+      let end = start + rowsPerPage;
+      let pageData = jadwalData.slice(start, end);
 
-/* ===== start slideshow (pindah halaman otomatis jika perlu) ===== */
-function startSlideshow(){
-  if(slideTimer) { clearInterval(slideTimer); slideTimer = null; }
-  if(jadwalRows.length <= rowsPerPage){
-    // cukup satu halaman - render page 0
-    currentPage = 0;
-    renderPage(0);
-    return;
-  }
-  // else cycle pages
-  slideTimer = setInterval(()=>{
-    currentPage++;
-    const totalPages = Math.ceil(jadwalRows.length / rowsPerPage);
-    if(currentPage >= totalPages) currentPage = 0;
-    renderPage(currentPage);
-  }, slideIntervalMs);
-  // render first page immediately
-  currentPage = 0;
-  renderPage(0);
-}
+      let html = pageData.map(cols => {
+        const tanggal = cols[0];
+        const hari = getHari(tanggal);
+        return `
+          <tr>
+            <td>${tanggal}</td>
+            <td>${hari}</td>
+            <td>${cols[1]}</td>
+            <td>${cols[2]}</td>
+            <td>${cols[3]}</td>
+            <td>${cols[4]}</td>
+          </tr>`;
+      }).join("");
 
-/* ===== load jadwal from CSV URL ===== */
-function loadJadwal(){
-  fetch(urlJadwal)
-    .then(r => {
-      if(!r.ok) throw new Error("Network response not ok");
-      return r.text();
-    })
-    .then(txt => {
-      const parsed = parseCSV(txt);
-      // remove header row if exists (assume first row headers if not date in first cell)
-      if(parsed.length === 0){ jadwalRows = []; startSlideshow(); return; }
-      // check header guess (if first row's first cell not date-like, treat as header)
-      const first = parsed[0][0] || "";
-      if(!/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}$/.test(first) && !/^\d{4}-\d{2}-\d{2}/.test(first)){
-        // it's header -> remove
-        parsed.shift();
+      document.querySelector("#jadwal tbody").innerHTML = html;
+
+      currentPage++;
+      if (start + rowsPerPage >= jadwalData.length) {
+        currentPage = 0;
       }
-      // filter rows with at least one non-empty cell
-      jadwalRows = parsed.filter(r => r.some(cell => (cell||"").trim() !== ""));
-      startSlideshow();
-    })
-    .catch(err => {
-      console.error("Gagal load jadwal:", err);
-      document.querySelector("#jadwal tbody").innerHTML = "<tr><td colspan='6' style='padding:20px;text-align:center'>Gagal memuat data</td></tr>";
-    });
-}
+    }
 
-/* ===== load pengumuman (running text) ===== */
-function loadPengumuman(){
-  fetch(urlPengumuman)
-    .then(r => {
-      if(!r.ok) throw new Error("Fetch error");
-      return r.text();
-    })
-    .then(txt => {
-      const parsed = parseCSV(txt);
-      // assume first column contains messages; skip header if present
-      let rows = parsed;
-      const first = rows[0] && rows[0][0] ? rows[0][0] : "";
-      if(first && first.toLowerCase().includes("judul") || first.toLowerCase().includes("pengumuman")) rows.shift();
-      const texts = rows.map(r => (r[0]||"").trim()).filter(Boolean);
-      document.getElementById("pengumuman").textContent = texts.length ? texts.join(" • ") : "Tidak ada pengumuman";
-    })
-    .catch(err => {
-      console.error("Gagal load pengumuman:", err);
-      document.getElementById("pengumuman").textContent = "Gagal memuat pengumuman";
-    });
-}
+    function loadPengumuman() {
+      fetch(urlPengumuman)
+        .then(res => res.text())
+        .then(data => {
+          let rows = data.split("\n").slice(1);
+          let text = rows.map(r => r.split(",")[0]).join(" • ");
+          document.getElementById("pengumuman").textContent = text || "Tidak ada pengumuman";
+        })
+        .catch(err => {
+          document.getElementById("pengumuman").textContent = "Gagal memuat pengumuman";
+          console.error(err);
+        });
+    }
 
-/* ===== clock updater ===== */
-function startClock(){
-  const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-  const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-  function update(){
-    const n = new Date();
-    const t = n.toLocaleTimeString('id-ID',{hour:"2-digit",minute:"2-digit",second:"2-digit"});
-    const dateStr = `${days[n.getDay()]}, ${String(n.getDate()).padStart(2,'0')} ${months[n.getMonth()]} ${n.getFullYear()}`;
-    const el = document.getElementById("clock");
-    el.innerHTML = `${t}<span class="date">${dateStr}</span>`;
-  }
-  update();
-  setInterval(update,1000);
-}
+    function updateClock() {
+      const now = new Date();
+      const jam = String(now.getHours()).padStart(2, '0');
+      const menit = String(now.getMinutes()).padStart(2, '0');
+      const detik = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById("clock").textContent = `${jam}:${menit}:${detik}`;
 
-/* ===== inizialisasi awal ===== */
-startClock();
-loadJadwal();
-loadPengumuman();
-// reload data tiap 60 detik agar realtime-ish
-setInterval(loadJadwal, 60*1000);
-setInterval(loadPengumuman, 60*1000);
-</script>
+      const hariList = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+      const bulanList = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+      const hari = hariList[now.getDay()];
+      const tanggal = now.getDate();
+      const bulan = bulanList[now.getMonth()];
+      const tahun = now.getFullYear();
+
+      document.getElementById("date").textContent = `${hari}, ${tanggal} ${bulan} ${tahun}`;
+    }
+
+    // Jalankan awal
+    loadJadwal();
+    loadPengumuman();
+    updateClock();
+    setInterval(updateClock, 1000);
+    setInterval(showPage, 5000);
+    setInterval(loadPengumuman, 60000);
+  </script>
 </body>
 </html>
-
-
+```
