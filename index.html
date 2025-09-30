@@ -1,234 +1,151 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jadwal Penggunaan Ruangan</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
+      font-family: Arial, sans-serif;
       background: url('background.png') no-repeat center center fixed;
       background-size: cover;
       color: white;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
     }
-    .logo {
-  width: 150px;   /* ubah sesuai kebutuhan, misalnya 120px atau 150px */
-  height: auto;
-}
+
     header {
-      background: rgba(0, 51, 102, 0.8);
-      color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background-color: rgba(0, 51, 102, 0.9);
       padding: 10px 20px;
     }
-    header .left {
-      display: flex;
-      align-items: center;
-    }
-    header img {
-      height: 80px;
+
+    .logo {
+      width: 100px; /* ukuran logo besar */
+      height: auto;
       margin-right: 15px;
     }
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-    header h2 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: normal;
-      color: #cce0ff;
-    }
-    #clock {
-      font-size: 22px;
-      font-weight: bold;
-      text-align: right;
-    }
-    main {
-      flex: 1;
+
+    .title-container {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      overflow: hidden;
-      background: rgba(0,0,0,0.5);
-      margin: 15px;
-      border-radius: 10px;
     }
-    table {
-  width: 100%;              /* penuh satu layar */
-  border-collapse: collapse;
-  background: transparent;
-  margin: 0;                /* hapus margin */
-}
 
-th, td {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 12px;
-  text-align: center;
-  color: #fff;
-  font-size: 18px;
-}
-
-th {
-  background: rgba(0, 51, 102, 0.9);
-  font-size: 20px;
-}
-
-tr:nth-child(even) {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-tr:nth-child(odd) {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-
-    #pengumuman {
-      background: rgba(0,0,0,0.8);
-      color: yellow;
-      text-align: center;
+    .title-container h1 {
+      margin: 0;
       font-size: 26px;
       font-weight: bold;
-      padding: 15px;
-      margin-top: auto;
+    }
+
+    .title-container h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: normal;
+    }
+
+    .datetime {
+      text-align: right;
+    }
+
+    .datetime .time {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .datetime .date {
+      font-size: 14px;
+    }
+
+    table {
+      width: 95%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: rgba(0, 51, 102, 0.9);
+      color: white;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: yellow;
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="left">
-      <img src="paroki.png" alt="Logo">
-      <div>
+    <div style="display:flex; align-items:center;">
+      <img src="logo.png" alt="Logo" class="logo">
+      <div class="title-container">
         <h1>Jadwal Penggunaan Ruangan</h1>
         <h2>Paroki Santa Maria Assumpta Klaten</h2>
       </div>
     </div>
-    <div id="clock"></div>
+    <div class="datetime">
+      <div class="time" id="clock">--:--:--</div>
+      <div class="date" id="date">Hari, DD MMMM YYYY</div>
+    </div>
   </header>
 
-  <main>
-    <table id="jadwal">
-      <thead>
-        <tr>
-          <th>Tanggal</th>
-          <th>Hari</th>
-          <th>Jam</th>
-          <th>Kegiatan</th>
-          <th>Ruangan</th>
-          <th>Penanggung Jawab</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td colspan="6">Memuat data...</td></tr>
-      </tbody>
-    </table>
-  </main>
+  <table>
+    <tr>
+      <th>Tanggal</th>
+      <th>Hari</th>
+      <th>Jam</th>
+      <th>Kegiatan</th>
+      <th>Ruangan</th>
+      <th>Penanggung Jawab</th>
+    </tr>
+    <tr>
+      <td>01/10/2025</td><td>Rabu</td><td>18:00</td><td>Pembelajaran KEP OMK</td><td>Aula</td><td>P. Aji</td>
+    </tr>
+    <tr>
+      <td>02/10/2025</td><td>Kamis</td><td>11:00</td><td>PEC</td><td>Aula</td><td>Mb. Ludvi</td>
+    </tr>
+    <!-- tambahkan baris lain di sini -->
+  </table>
 
-  <div id="pengumuman">Memuat pengumuman...</div>
+  <div class="footer">
+    Pemesanan Ruangan Hubungi Mbak Sari (0851 6147 0021)
+  </div>
 
   <script>
-    const urlJadwal = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=0&single=true&output=csv";
-    const urlPengumuman = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=563346649&single=true&output=csv";
-
-    let jadwalData = [];
-    let currentPage = 0;
-    const rowsPerPage = 10;
-
-    function getHari(d) {
-      if (!d || d.trim() === "") return "";
-      let date;
-      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(d.trim())) {
-        const [day, month, year] = d.trim().split("/");
-        date = new Date(`${year}-${month}-${day}`);
-      } else {
-        date = new Date(d);
-      }
-      if (isNaN(date)) return "";
-      return date.toLocaleDateString("id-ID", { weekday: "long" });
-    }
-
-    function loadJadwal() {
-      fetch(urlJadwal)
-        .then(res => res.text())
-        .then(data => {
-          jadwalData = data.split("\n").slice(1).map(r => r.split(","));
-          currentPage = 0;
-          showPage();
-        })
-        .catch(err => {
-          document.querySelector("#jadwal tbody").innerHTML = "<tr><td colspan='6'>Gagal memuat data</td></tr>";
-          console.error(err);
-        });
-    }
-
-    function showPage() {
-      if (jadwalData.length === 0) return;
-      let start = currentPage * rowsPerPage;
-      let end = start + rowsPerPage;
-      let pageData = jadwalData.slice(start, end);
-
-      let html = pageData.map(cols => {
-        const tanggal = cols[0];
-        const hari = getHari(tanggal);
-        return `
-          <tr>
-            <td>${tanggal}</td>
-            <td>${hari}</td>
-            <td>${cols[1]}</td>
-            <td>${cols[2]}</td>
-            <td>${cols[3]}</td>
-            <td>${cols[4]}</td>
-          </tr>`;
-      }).join("");
-
-      document.querySelector("#jadwal tbody").innerHTML = html;
-
-      currentPage++;
-      if (start + rowsPerPage >= jadwalData.length) {
-        currentPage = 0;
-      }
-    }
-
-    function loadPengumuman() {
-      fetch(urlPengumuman)
-        .then(res => res.text())
-        .then(data => {
-          let rows = data.split("\n").slice(1);
-          let text = rows.map(r => r.split(",")[0]).join(" • ");
-          document.getElementById("pengumuman").textContent = text || "Tidak ada pengumuman";
-        })
-        .catch(err => {
-          document.getElementById("pengumuman").textContent = "Gagal memuat pengumuman";
-          console.error(err);
-        });
-    }
-
     function updateClock() {
+      const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+      const months = [
+        "Januari","Februari","Maret","April","Mei","Juni",
+        "Juli","Agustus","September","Oktober","November","Desember"
+      ];
+
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
       const m = String(now.getMinutes()).padStart(2, '0');
       const s = String(now.getSeconds()).padStart(2, '0');
-      const hari = now.toLocaleDateString("id-ID", { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-      document.getElementById("clock").innerHTML = `${h}:${m}:${s}<br>${hari}`;
+
+      const dayName = days[now.getDay()];
+      const day = String(now.getDate()).padStart(2, '0');
+      const monthName = months[now.getMonth()];
+      const year = now.getFullYear();
+
+      document.getElementById("clock").textContent = `${h}:${m}:${s}`;
+      document.getElementById("date").textContent = `${dayName}, ${day} ${monthName} ${year}`;
     }
 
-    // Jalankan awal
-    loadJadwal();
-    loadPengumuman();
-    updateClock();
     setInterval(updateClock, 1000);
-    setInterval(showPage, 5000);
-    setInterval(loadPengumuman, 60000);
+    updateClock();
   </script>
 </body>
 </html>
-
-
-
-
+```
