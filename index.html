@@ -6,8 +6,8 @@
   <title>Jadwal Penggunaan Ruangan</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
+      margin: 0;
       background: url('background.png') no-repeat center center fixed;
       background-size: cover;
       color: white;
@@ -16,53 +16,50 @@
       height: 100vh;
     }
 
-    /* HEADER RAMPING */
-    .header {
+    /* HEADER */
+    header {
+      background: rgba(0, 51, 102, 0.8);
+      color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 25px;   /* lebih kecil dari sebelumnya */
-      background: linear-gradient(to bottom, #0d4d7d, #063a5c);
-      color: white;
+      padding: 20px 30px;
     }
 
-    .header-left {
+    header .left {
       display: flex;
       align-items: center;
     }
 
-    .header-left img {
-      height: 120px !important;   /* logo besar tapi tidak terlalu makan layar */
-      width: auto !important;
-      margin-right: 20px;
+    /* LOGO BESAR */
+    header img {
+      height: 140px;   /* logo besar */
+      margin-right: 22px;
     }
 
-    .header-left-text h1 {
-      font-size: 48px !important; /* judul besar */
+    /* JUDUL BESAR */
+    header h1 {
       margin: 0;
+      font-size: 48px;  /* judul besar */
     }
 
-    .header-left-text h2 {
-      font-size: 26px !important; /* subjudul */
+    /* SUBJUDUL BESAR */
+    header h2 {
       margin: 0;
+      font-size: 28px;  /* subjudul besar */
       font-weight: normal;
       color: #cce0ff;
     }
 
-    .header-right {
-      text-align: right;
-    }
-
-    .header-right .clock {
-      font-size: 48px !important; /* jam besar */
+    /* JAM BESAR */
+    #clock {
+      font-size: 42px;   /* jam besar */
       font-weight: bold;
+      text-align: right;
+      line-height: 1.5;
     }
 
-    .header-right .date {
-      font-size: 24px !important; /* tanggal */
-    }
-
-    /* MAIN TABLE */
+    /* MAIN CONTENT */
     main {
       flex: 1;
       display: flex;
@@ -83,15 +80,15 @@
 
     th, td {
       border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 12px;
+      padding: 14px;
       text-align: center;
       color: #fff;
-      font-size: 18px;
+      font-size: 20px;
     }
 
     th {
       background: rgba(0, 51, 102, 0.9);
-      font-size: 20px;
+      font-size: 22px;
     }
 
     tr:nth-child(even) {
@@ -107,30 +104,25 @@
       background: rgba(0,0,0,0.8);
       color: yellow;
       text-align: center;
-      font-size: 26px;
+      font-size: 28px;
       font-weight: bold;
-      padding: 15px;
+      padding: 18px;
       margin-top: auto;
     }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <div class="header">
-    <div class="header-left">
+  <header>
+    <div class="left">
       <img src="paroki.png" alt="Logo">
-      <div class="header-left-text">
+      <div>
         <h1>Jadwal Penggunaan Ruangan</h1>
         <h2>Paroki Santa Maria Assumpta Klaten</h2>
       </div>
     </div>
-    <div class="header-right">
-      <div class="clock" id="clock">00:00:00</div>
-      <div class="date" id="date">Memuat tanggal...</div>
-    </div>
-  </div>
+    <div id="clock"></div>
+  </header>
 
-  <!-- MAIN -->
   <main>
     <table id="jadwal">
       <thead>
@@ -149,7 +141,6 @@
     </table>
   </main>
 
-  <!-- PENGUMUMAN -->
   <div id="pengumuman">Memuat pengumuman...</div>
 
   <script>
@@ -231,19 +222,11 @@
 
     function updateClock() {
       const now = new Date();
-      const jam = String(now.getHours()).padStart(2, '0');
-      const menit = String(now.getMinutes()).padStart(2, '0');
-      const detik = String(now.getSeconds()).padStart(2, '0');
-      document.getElementById("clock").textContent = `${jam}:${menit}:${detik}`;
-
-      const hariList = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-      const bulanList = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-      const hari = hariList[now.getDay()];
-      const tanggal = now.getDate();
-      const bulan = bulanList[now.getMonth()];
-      const tahun = now.getFullYear();
-
-      document.getElementById("date").textContent = `${hari}, ${tanggal} ${bulan} ${tahun}`;
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const hari = now.toLocaleDateString("id-ID", { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById("clock").innerHTML = `${h}:${m}:${s}<br>${hari}`;
     }
 
     // Jalankan awal
