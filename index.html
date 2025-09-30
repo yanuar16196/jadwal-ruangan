@@ -35,36 +35,30 @@
       box-shadow: 0 2px 0 rgba(0,0,0,0.25);
     }
 
-.header-left {
-  display: flex;
-  align-items: center;
+header .header-left img {
+  height: 200px !important;
+  width: auto !important;
 }
 
-.header-left img {
-  height: 200px !important;   /* logo fix besar */
-  width: auto;
-  margin-right: 20px;
-}
-
-.header-left h1 {
-  font-size: 60px !important;  /* judul besar */
+header .header-left h1 {
+  font-size: 70px !important; /* judul super besar */
   margin: 0;
 }
 
-.header-left h2 {
-  font-size: 40px !important;  /* subjudul besar */
+header .header-left h2 {
+  font-size: 50px !important; /* subjudul besar */
   margin: 0;
-  font-weight: normal;
 }
 
-.header-right .clock {
-  font-size: 60px !important;  /* jam besar */
+header .header-right .clock {
+  font-size: 70px !important; /* jam besar */
   font-weight: bold;
 }
 
-.header-right .date {
-  font-size: 40px !important;  /* tanggal besar */
+header .header-right .date {
+  font-size: 40px !important; /* tanggal besar */
 }
+
 
 
     .left {
@@ -171,7 +165,7 @@
 </head>
 <body>
   <header>
-    <div class="left">
+    <div class="header-left">
       <img src="paroki.png" class="logo" alt="Logo Paroki">
       <div class="title">
         <h1>Jadwal Penggunaan Ruangan</h1>
@@ -393,6 +387,7 @@ setInterval(loadPengumuman, 60*1000);
 </script>
 </body>
 </html>
+
 
 
 
