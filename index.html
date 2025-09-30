@@ -15,51 +15,41 @@
       flex-direction: column;
       height: 100vh;
     }
-
-    /* HEADER */
+    .logo {
+  width: 150px;   /* ubah sesuai kebutuhan, misalnya 120px atau 150px */
+  height: auto;
+}
     header {
       background: rgba(0, 51, 102, 0.8);
       color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 30px;
+      padding: 15px 25px;
     }
-
     header .left {
       display: flex;
       align-items: center;
     }
-
-    /* LOGO BESAR */
     header img {
-      height: 140px;   /* logo besar */
-      margin-right: 22px;
+      height: 80px;
+      margin-right: 15px;
     }
-
-    /* JUDUL BESAR */
     header h1 {
       margin: 0;
-      font-size: 48px;  /* judul besar */
+      font-size: 28px;
     }
-
-    /* SUBJUDUL BESAR */
     header h2 {
       margin: 0;
-      font-size: 28px;  /* subjudul besar */
+      font-size: 20px;
       font-weight: normal;
       color: #cce0ff;
     }
-
-    /* JAM BESAR */
     #clock {
-      font-size: 42px;   /* jam besar */
+      font-size: 22px;
       font-weight: bold;
       text-align: right;
-      line-height: 1.5;
     }
-
-    /* MAIN CONTENT */
     main {
       flex: 1;
       display: flex;
@@ -70,43 +60,42 @@
       margin: 15px;
       border-radius: 10px;
     }
-
     table {
-      width: 100%;
-      border-collapse: collapse;
-      background: transparent;
-      margin: 0;
-    }
+  width: 100%;              /* penuh satu layar */
+  border-collapse: collapse;
+  background: transparent;
+  margin: 0;                /* hapus margin */
+}
 
-    th, td {
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 14px;
-      text-align: center;
-      color: #fff;
-      font-size: 20px;
-    }
+th, td {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px;
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+}
 
-    th {
-      background: rgba(0, 51, 102, 0.9);
-      font-size: 22px;
-    }
+th {
+  background: rgba(0, 51, 102, 0.9);
+  font-size: 20px;
+}
 
-    tr:nth-child(even) {
-      background: rgba(255, 255, 255, 0.1);
-    }
+tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.1);
+}
 
-    tr:nth-child(odd) {
-      background: rgba(0, 0, 0, 0.1);
-    }
+tr:nth-child(odd) {
+  background: rgba(0, 0, 0, 0.1);
+}
 
-    /* PENGUMUMAN */
+
     #pengumuman {
       background: rgba(0,0,0,0.8);
       color: yellow;
       text-align: center;
-      font-size: 28px;
+      font-size: 26px;
       font-weight: bold;
-      padding: 18px;
+      padding: 15px;
       margin-top: auto;
     }
   </style>
@@ -239,4 +228,7 @@
   </script>
 </body>
 </html>
+
+
+
 
