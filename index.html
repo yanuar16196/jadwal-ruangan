@@ -27,7 +27,7 @@
     /* HEADER */
      header{
       background: linear-gradient(180deg,var(--header-bg), #0b3f63);
-      padding:15px 30px;
+      padding:10px 30px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -35,31 +35,37 @@
       box-shadow: 0 2px 0 rgba(0,0,0,0.25);
     }
 
-.header img {
-  height:180px;               /* logo lebih besar (sebelumnya 40px) */
-  margin-right:20px;
+.header-left {
+  display: flex;
+  align-items: center;
 }
 
-.header h1 {
-  font-size:70px;            /* judul lebih besar */
-  margin:0;
+.header-left img {
+  height: 100px !important;   /* logo fix besar */
+  width: auto;
+  margin-right: 20px;
 }
 
-.header h2 {
-  font-size:50px;            /* subjudul lebih besar */
-  margin:0;
-  font-weight:normal;
+.header-left h1 {
+  font-size: 48px !important;  /* judul besar */
+  margin: 0;
+}
+
+.header-left h2 {
+  font-size: 28px !important;  /* subjudul besar */
+  margin: 0;
+  font-weight: normal;
 }
 
 .header-right .clock {
-  font-size:65px;            /* jam lebih besar */
-  font-weight : bold;
+  font-size: 40px !important;  /* jam besar */
+  font-weight: bold;
 }
 
 .header-right .date {
-  font-size:50px;            /* tanggal lebih besar */
-  margin-top: 5px;
+  font-size: 28px !important;  /* tanggal besar */
 }
+
 
     .left {
       display:flex; align-items:center; gap:14px;
@@ -387,6 +393,7 @@ setInterval(loadPengumuman, 60*1000);
 </script>
 </body>
 </html>
+
 
 
 
