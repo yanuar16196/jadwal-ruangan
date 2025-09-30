@@ -24,16 +24,40 @@
       box-sizing:border-box;
     }
 
-    /* HEADER */
-    header{
-      background: linear-gradient(180deg,var(--header-bg), #0b3f63);
-      padding:12px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      position:relative;
-      box-shadow: 0 2px 0 rgba(0,0,0,0.25);
-    }
+    /* HEADER */  
+    .header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:20px 30px;         /* lebih tebal biar lega */
+  background:#0d4d7d;
+  color:white;
+}
+
+.header img {
+  height:80px;               /* logo lebih besar (sebelumnya 40px) */
+  margin-right:20px;
+}
+
+.header h1 {
+  font-size:36px;            /* judul lebih besar */
+  margin:0;
+}
+
+.header h2 {
+  font-size:20px;            /* subjudul lebih besar */
+  margin:0;
+  font-weight:normal;
+}
+
+.header .clock {
+  font-size:28px;            /* jam lebih besar */
+}
+
+.header .date {
+  font-size:18px;            /* tanggal lebih besar */
+}
+
     .left {
       display:flex; align-items:center; gap:14px;
     }
@@ -360,6 +384,7 @@ setInterval(loadPengumuman, 60*1000);
 </script>
 </body>
 </html>
+
 
 
 
