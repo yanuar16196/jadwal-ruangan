@@ -61,29 +61,32 @@
       border-radius: 10px;
     }
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-      font-size: 20px;
-    }
-    th, td {
-      border: 1px solid #444;
-      padding: 18px;
-      text-align: center;
-      line-height: 1.6;
-      min-height: 40px;
-    }
-    th {
-      background: rgba(0, 51, 102, 0.9);
-      color: white;
-      font-size: 21px;
-    }
-    tr:nth-child(even) {
-      background: rgba(34,34,34,0.8);
-    }
-    tr:nth-child(odd) {
-      background: rgba(17,17,17,0.8);
-    }
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent; /* transparan */
+}
+
+th, td {
+  border: 1px solid rgba(255, 255, 255, 0.3); /* garis tipis semi transparan */
+  padding: 12px;
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+}
+
+th {
+  background: rgba(0, 51, 102, 0.9); /* biru header, biar tegas */
+  font-size: 20px;
+}
+
+tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.1); /* strip putih transparan */
+}
+
+tr:nth-child(odd) {
+  background: rgba(0, 0, 0, 0.1); /* strip hitam transparan */
+}
+
     #pengumuman {
       background: rgba(0,0,0,0.8);
       color: yellow;
@@ -223,4 +226,5 @@
   </script>
 </body>
 </html>
+
 
