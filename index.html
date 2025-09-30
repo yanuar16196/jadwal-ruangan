@@ -24,15 +24,16 @@
       box-sizing:border-box;
     }
 
-    /* HEADER */  
-    .header {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:20px 30px;         /* lebih tebal biar lega */
-  background:#0d4d7d;
-  color:white;
-}
+    /* HEADER */
+     header{
+      background: linear-gradient(180deg,var(--header-bg), #0b3f63);
+      padding:20px 30px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      position:relative;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.25);
+    }
 
 .header img {
   height:80px;               /* logo lebih besar (sebelumnya 40px) */
@@ -384,6 +385,7 @@ setInterval(loadPengumuman, 60*1000);
 </script>
 </body>
 </html>
+
 
 
 
