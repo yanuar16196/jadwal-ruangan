@@ -1,209 +1,197 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Jadwal Penggunaan Ruangan - Paroki</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadwal Penggunaan Ruangan</title>
   <style>
-    :root{
-      --header-bg: #0e4a7a;
-      --table-header: rgba(2,57,107,0.95);
-      --cell-dark: rgba(0,0,0,0.66);
-      --cell-dark-2: rgba(0,0,0,0.78);
-      --accent-yellow: #ffea00;
-    }
-
-    html,body{
-      height:100%;margin:0;
-      font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      color:#fff;background:#111;
-    }
-    body{
-      background: url('background.png') no-repeat center center fixed;
-      background-size: cover;
-      display:flex;flex-direction:column;min-height:100vh;
-      box-sizing:border-box;
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
     }
 
     /* HEADER */
-    header{
-      background: linear-gradient(180deg,var(--header-bg), #0b3f63);
-      padding:12px 18px;
-      display:flex;align-items:center;justify-content:space-between;
-      position:relative;
-      box-shadow: 0 2px 0 rgba(0,0,0,0.25);
-    }
-    .left {
-      display:flex; align-items:center; gap:14px;
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to right, #0a4c7d, #0a3a5d);
+      color: white;
+      padding: 15px 30px;
     }
 
-    /* RESPONSIVE SCALE */
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* LOGO */
     .logo {
-      height: clamp(70px, 12vh, 160px);
-      max-width: clamp(80px, 15vw, 200px);
-    }
-    h1 {
-      margin:0;
-      font-size: clamp(24px, 3vw, 56px);
-      font-weight:700;
-      text-shadow: 0 1px 0 rgba(0,0,0,0.6);
-    }
-    .subtitle {
-      margin:3px 0 0;
-      font-size: clamp(14px, 1.5vw, 32px);
-      color:#d6e7ff; opacity:0.95;
-    }
-    #clock{
-      text-align:right;
-      font-weight:700;
-      font-size: clamp(18px, 2vw, 42px);
-      min-width:220px;
-      color:#fff;
-    }
-    #clock .date{
-      font-weight:400;
-      font-size: clamp(12px, 1.2vw, 28px);
-      color:#dbeeff;
-      display:block;
-      margin-top:4px;
+      height: clamp(90px, 15vh, 160px);
+      max-width: 160px;
+      width: auto;
+      object-fit: contain;
     }
 
-    /* TABLE */
-    .table-container{margin:10px 18px 0 18px;}
-    .table-wrapper{
-      border-radius:10px; overflow:hidden;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-      border:4px solid rgba(255,255,255,0.02);
+    .title {
+      display: flex;
+      flex-direction: column;
     }
-    table{
-      width:100%; border-collapse:collapse;
-      table-layout:fixed; color:#fff; background: transparent;
-      font-size: clamp(14px, 1.4vw, 22px);
-    }
-    thead th{
-      position:sticky; top:0; z-index:2;
-      background: var(--table-header);
-      padding:14px 10px;
-      font-weight:700;
-      border-bottom:2px solid rgba(255,255,255,0.06);
-    }
-    tbody td{
-      padding:14px 10px;
-      border-left: 1px solid rgba(255,255,255,0.03);
-      border-right: 1px solid rgba(0,0,0,0.05);
-    }
-    tbody tr:nth-child(odd) td{ background: var(--cell-dark); }
-    tbody tr:nth-child(even) td{ background: var(--cell-dark-2); }
 
-    /* FOOTER */
-    .footer-note{
-      margin-top:auto;
-      background: rgba(0,0,0,0.85);
-      color: var(--accent-yellow);
-      font-weight:800;
-      font-size: clamp(16px, 1.5vw, 26px);
-      text-align:center;
-      padding:12px 8px;
-      letter-spacing:0.6px;
+    .title h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    .title p {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 300;
+    }
+
+    .clock {
+      text-align: right;
+    }
+
+    .clock h2 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .clock p {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    /* TABEL */
+    table {
+      width: 95%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #0a4c7d;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* FOOTER INFO */
+    .footer-info {
+      background: #111;
+      color: yellow;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="left">
-      <img src="paroki.png" class="logo" alt="Logo Paroki">
-      <div>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <img src="logo.png" alt="Logo" class="logo">
+      <div class="title">
         <h1>Jadwal Penggunaan Ruangan</h1>
-        <div class="subtitle">Paroki Santa Maria Assumpta Klaten</div>
+        <p>Paroki Santa Maria Assumpta Klaten</p>
       </div>
     </div>
-    <div id="clock">--:--:--<span class="date">Memuat tanggal...</span></div>
-  </header>
-
-  <div class="table-container">
-    <div class="table-wrapper">
-      <table id="jadwal">
-        <thead>
-          <tr>
-            <th>Tanggal</th>
-            <th>Hari</th>
-            <th>Jam</th>
-            <th>Kegiatan</th>
-            <th>Ruangan</th>
-            <th>Penanggung Jawab</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="6" style="padding:24px; text-align:center;">Memuat data...</td></tr>
-        </tbody>
-      </table>
+    <div class="clock">
+      <h2 id="time">00:00:00</h2>
+      <p id="date">Senin, 01 Januari 2025</p>
     </div>
   </div>
 
-  <div class="footer-note" id="pengumuman">Memuat pengumuman...</div>
+  <!-- TABEL -->
+  <table id="data-table">
+    <thead>
+      <tr>
+        <th>Tanggal</th>
+        <th>Hari</th>
+        <th>Jam</th>
+        <th>Kegiatan</th>
+        <th>Ruangan</th>
+        <th>Penanggung Jawab</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="6">Memuat data...</td></tr>
+    </tbody>
+  </table>
 
-<script>
-/* === CONFIG LINK SPREADSHEET === */
-const urlJadwal = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=0&single=true&output=csv";
-const urlPengumuman = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=563346649&single=true&output=csv";
+  <!-- FOOTER INFO -->
+  <div class="footer-info">
+    Harap menjaga kebersihan ruangan • Pemesanan Ruangan Hubungi Mbak Sari (0851 6147 0021)
+  </div>
 
-/* JAM REALTIME */
-function startClock(){
-  const days=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-  const months=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-  function update(){
-    const n=new Date();
-    const t=n.toLocaleTimeString('id-ID',{hour:"2-digit",minute:"2-digit",second:"2-digit"});
-    const dateStr=`${days[n.getDay()]}, ${String(n.getDate()).padStart(2,'0')} ${months[n.getMonth()]} ${n.getFullYear()}`;
-    document.getElementById("clock").innerHTML=`${t}<span class="date">${dateStr}</span>`;
-  }
-  update(); setInterval(update,1000);
-}
-startClock();
+  <!-- SCRIPT JAM -->
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+      document.getElementById('time').textContent = now.toLocaleTimeString('id-ID');
+      document.getElementById('date').textContent = now.toLocaleDateString('id-ID', options);
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
 
-/* LOAD CSV */
-async function loadCSV(url){
-  const res = await fetch(url);
-  return (await res.text()).trim().split("\n").map(r=>r.split(","));
-}
+  <!-- SCRIPT FETCH CSV -->
+  <script>
+    // Ganti dengan link CSV dari spreadsheet
+    const urlJadwal = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=0&single=true&output=csv";
+    const urlPengumuman = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=563346649&single=true&output=csv";
 
-/* TABEL JADWAL */
-async function loadJadwal(){
-  try{
-    const data = await loadCSV(urlJadwal);
-    const tbody=document.querySelector("#jadwal tbody");
-    tbody.innerHTML="";
-    data.slice(1).forEach(row=>{
-      if(row.length<6) return;
-      const tr=document.createElement("tr");
-      row.forEach(cell=>{
-        const td=document.createElement("td");
-        td.textContent=cell;
-        tr.appendChild(td);
-      });
-      tbody.appendChild(tr);
-    });
-  }catch(e){
-    console.error(e);
-  }
-}
+    async function loadData() {
+      try {
+        const response = await fetch(url);
+        const csv = await response.text();
+        const rows = csv.split("\n").map(r => r.split(","));
 
-/* FOOTER PENGUMUMAN */
-async function loadPengumuman(){
-  try{
-    const data=await loadCSV(urlPengumuman);
-    const pengumuman=document.getElementById("pengumuman");
-    pengumuman.textContent=data[1]?.[0] || "Tidak ada pengumuman";
-  }catch(e){ console.error(e); }
-}
+        const tableBody = document.querySelector("#data-table tbody");
+        tableBody.innerHTML = "";
 
-/* AUTO REFRESH setiap 30 detik */
-function refreshAll(){
-  loadJadwal();
-  loadPengumuman();
-}
-refreshAll();
-setInterval(refreshAll,30000);
-</script>
+        // Skip baris pertama (header), ambil data mulai baris ke-2
+        rows.slice(1).forEach(row => {
+          if (row.length > 1) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${row[0] || ""}</td>
+              <td>${row[1] || ""}</td>
+              <td>${row[2] || ""}</td>
+              <td>${row[3] || ""}</td>
+              <td>${row[4] || ""}</td>
+              <td>${row[5] || ""}</td>
+            `;
+            tableBody.appendChild(tr);
+          }
+        });
+      } catch (error) {
+        console.error("Gagal mengambil data:", error);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadData);
+  </script>
 </body>
 </html>
