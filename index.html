@@ -18,19 +18,18 @@
       align-items: center;
       background: linear-gradient(to right, #0a4c7d, #0a3a5d);
       color: white;
-      padding: 15px 30px;
+      padding: 20px 40px;
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 25px;
     }
 
     /* LOGO */
     .logo {
-      height: clamp(90px, 15vh, 160px);
-      max-width: 160px;
+      height: 140px;
       width: auto;
       object-fit: contain;
     }
@@ -42,27 +41,24 @@
 
     .title h1 {
       margin: 0;
-      font-size: 2.5rem;
+      font-size: 2.8rem;
     }
 
     .title p {
       margin: 0;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 300;
     }
 
     .clock {
       text-align: right;
-    }
-
-    .clock h2 {
-      margin: 0;
       font-size: 2rem;
     }
 
-    .clock p {
-      margin: 0;
-      font-size: 1rem;
+    .clock .date {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: normal;
     }
 
     /* TABEL */
@@ -71,6 +67,7 @@
       margin: 20px auto;
       border-collapse: collapse;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      background: white;
     }
 
     th, td {
@@ -99,10 +96,13 @@
       color: yellow;
       font-weight: bold;
       text-align: center;
-      padding: 10px;
+      padding: 12px;
       position: fixed;
       bottom: 0;
       width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   </style>
 </head>
@@ -110,20 +110,17 @@
   <!-- HEADER -->
   <div class="header">
     <div class="header-left">
-      <img src="paroki.png" alt="Logo" class="logo">
+      <img src="paroki2.png" alt="Logo" class="logo paroki">
       <div class="title">
         <h1>Jadwal Penggunaan Ruangan</h1>
         <p>Paroki Santa Maria Assumpta Klaten</p>
       </div>
     </div>
-    <div class="clock">
-      <h2 id="time">00:00:00</h2>
-      <p id="date">Senin, 01 Januari 2025</p>
-    </div>
+    <div class="clock" id="clock"></div>
   </div>
 
   <!-- TABEL -->
-  <table id="data-table">
+  <table id="jadwal">
     <thead>
       <tr>
         <th>Tanggal</th>
@@ -140,59 +137,137 @@
   </table>
 
   <!-- FOOTER INFO -->
-  <div class="footer-info">
-    Harap menjaga kebersihan ruangan • Pemesanan Ruangan Hubungi Mbak Sari (0851 6147 0021)
+  <div class="footer-info" id="pengumuman">
+    Memuat pengumuman...
   </div>
 
-  <!-- SCRIPT JAM -->
+  <!-- SCRIPT -->
   <script>
-    function updateClock() {
-      const now = new Date();
-      const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
-      document.getElementById('time').textContent = now.toLocaleTimeString('id-ID');
-      document.getElementById('date').textContent = now.toLocaleDateString('id-ID', options);
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-  </script>
+  /* === CONFIG URL (ubah sesuai spreadsheet) === */
+  const urlJadwal = "PASTE_URL_CSV_JADWAL_DI_SINI";
+  const urlPengumuman = "PASTE_URL_CSV_PENGUMUMAN_DI_SINI";
 
-  <!-- SCRIPT FETCH CSV -->
-  <script>
-    // Ganti dengan link CSV dari spreadsheet
-    const urlJadwal = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=0&single=true&output=csv";
-    const urlPengumuman = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=563346649&single=true&output=csv";
+  /* === SETTINGS === */
+  const rowsPerPage = 10;         // baris per halaman tabel
+  const slideIntervalMs = 30000;  // pindah halaman tiap 30 detik
+  const reloadIntervalMs = 30000; // refresh data tiap 30 detik
 
-    async function loadData() {
-      try {
-        const response = await fetch(url);
-        const csv = await response.text();
-        const rows = csv.split("\n").map(r => r.split(","));
-
-        const tableBody = document.querySelector("#data-table tbody");
-        tableBody.innerHTML = "";
-
-        // Skip baris pertama (header), ambil data mulai baris ke-2
-        rows.slice(1).forEach(row => {
-          if (row.length > 1) {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td>${row[0] || ""}</td>
-              <td>${row[1] || ""}</td>
-              <td>${row[2] || ""}</td>
-              <td>${row[3] || ""}</td>
-              <td>${row[4] || ""}</td>
-              <td>${row[5] || ""}</td>
-            `;
-            tableBody.appendChild(tr);
-          }
-        });
-      } catch (error) {
-        console.error("Gagal mengambil data:", error);
+  /* CSV parser */
+  function parseCSV(text){
+    const lines=text.split(/\r?\n/).filter(l=>l.trim()!=="");
+    return lines.map(line=>{
+      const row=[]; let cur="",inQ=false;
+      for(let i=0;i<line.length;i++){
+        const c=line[i];
+        if(c=='"'){ if(inQ && line[i+1]=='"'){cur+='"'; i++;} else inQ=!inQ; }
+        else if(c=="," && !inQ){ row.push(cur); cur=""; }
+        else cur+=c;
       }
-    }
+      row.push(cur); return row;
+    });
+  }
 
-    window.addEventListener("DOMContentLoaded", loadData);
+  /* Hari dari tanggal */
+  function getHari(dateStr){
+    if(!dateStr) return "";
+    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)){
+      const [d,m,y]=dateStr.split("/");
+      const tgl=new Date(`${y}-${m}-${d}`);
+      return !isNaN(tgl)?tgl.toLocaleDateString("id-ID",{weekday:"long"}):"";
+    }
+    const d=new Date(dateStr);
+    return !isNaN(d)?d.toLocaleDateString("id-ID",{weekday:"long"}):"";
+  }
+
+  /* Slideshow Jadwal */
+  let jadwalData = [];
+  let currentPage = 0;
+  let slideTimer;
+
+  function renderPage(page){
+    const tbody=document.querySelector("#jadwal tbody");
+    tbody.innerHTML="";
+    const start = page * rowsPerPage;
+    const end = start + rowsPerPage;
+    const slice = jadwalData.slice(start,end);
+    if(slice.length===0){
+      tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:20px">Tidak ada data</td></tr>`;
+      return;
+    }
+    slice.forEach(r=>{
+      if(r.length<5) return;
+      const hari=getHari(r[0]);
+      tbody.innerHTML+=`
+        <tr>
+          <td>${r[0]}</td>
+          <td>${hari}</td>
+          <td>${r[1]}</td>
+          <td style="text-align:left;padding-left:12px">${r[2]}</td>
+          <td>${r[3]}</td>
+          <td>${r[4]}</td>
+        </tr>`;
+    });
+  }
+
+  function startSlideshow(){
+    if(slideTimer) clearInterval(slideTimer);
+    renderPage(currentPage);
+    slideTimer=setInterval(()=>{
+      currentPage++;
+      if(currentPage * rowsPerPage >= jadwalData.length){
+        currentPage=0;
+      }
+      renderPage(currentPage);
+    }, slideIntervalMs);
+  }
+
+  /* Load Jadwal */
+  function loadJadwal(){
+    fetch(urlJadwal).then(r=>r.text()).then(txt=>{
+      const data=parseCSV(txt);
+      if(data.length<=1) return;
+      data.shift();
+      jadwalData=data;
+      currentPage=0;
+      startSlideshow();
+    }).catch(err=>{
+      console.error(err);
+      document.querySelector("#jadwal tbody").innerHTML="<tr><td colspan=6>Gagal memuat data</td></tr>";
+    });
+  }
+
+  /* Load Pengumuman */
+  function loadPengumuman(){
+    fetch(urlPengumuman).then(r=>r.text()).then(txt=>{
+      const data=parseCSV(txt);
+      data.shift();
+      const pesan=data.map(r=>(r[0]||"").trim()).filter(Boolean);
+      document.getElementById("pengumuman").textContent=pesan.length?pesan.join(" • "):"Tidak ada pengumuman";
+    }).catch(err=>{
+      document.getElementById("pengumuman").textContent="Gagal memuat pengumuman";
+    });
+  }
+
+  /* Clock */
+  function startClock(){
+    const days=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    const months=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    function update(){
+      const n=new Date();
+      const jam=n.toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+      const tgl=`${days[n.getDay()]}, ${n.getDate()} ${months[n.getMonth()]} ${n.getFullYear()}`;
+      document.getElementById("clock").innerHTML=`${jam}<span class="date">${tgl}</span>`;
+    }
+    update(); setInterval(update,1000);
+  }
+
+  /* Init */
+  startClock();
+  loadJadwal();
+  loadPengumuman();
+
+  setInterval(loadJadwal, reloadIntervalMs);
+  setInterval(loadPengumuman, reloadIntervalMs);
   </script>
 </body>
 </html>
-
