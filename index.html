@@ -7,62 +7,65 @@
   <style>
     :root{
       --header-bg: #0e4a7a;
-      --header-accent: rgba(255,255,255,0.12);
-      --table-header: rgba(2,57,107,0.95);
+      --header-accent: rgba(2,57,107,0.95);
+      --table-header: rgba(0,0,0,0.66);
       --cell-dark: rgba(0,0,0,0.66);
       --cell-dark-2: rgba(0,0,0,0.78);
       --accent-yellow: #ffea00;
     }
 
-    html,body{height:100%;margin:0;font-family:"Segoe UI", Roboto, Arial; color:#fff;background:#111;}
+    html,body{height:100vh; overflow: hidden; margin:0;font-family:"Segoe UI", Roboto, Arial; color:#fff;background:#111;}
     body{
       background: url('background.png') no-repeat center center fixed;
       background-size: cover;
-      display:flex;
-      flex-direction:column;
-      min-height:100vh;
-      box-sizing:border-box;
+      
     }
 
     /* HEADER */
     header{
       background: var(--header-bg);
-      padding:20px;
+      padding:20px 40px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       border-radius: 0 0 16px 16px;
       box-shadow:0 4px 12px rgba(0,0,0,0.4);
+      flex-shrink: 0;
     }
-    .left {
-      display:flex; align-items:center; gap:20px;
-    }
+  
     .logo{
-      height:100px; width:auto; display:block;
-    }
-    .title {
-      line-height:1.2;
+      height:100px; width:auto; 
     }
     h1{
-      margin:0; font-size:50px; font-weight:800;
+      margin:0; font-size:56px; font-weight:800;
     }
-    .subtitle{ margin:6px 0 0; font-size:26px; color:#d6e7ff; }
+    .subtitle{ margin:6px; font-size:26px; color:#d6e7ff; }
 
     /* clock */
     #clock{
       text-align:right;
       font-weight:700;
       font-size:38px;
-      min-width:260px;
+      min-width:280px;
       color:#fff;
     }
-    #clock .date{ font-weight:500; font-size:25px; color:#dbeeff; display:block; margin-top:6px; }
+    #clock .date{ font-weight:500; font-size:25px; color:#dbeeff; display:block; margin-top:8px; }
 
     /* table container */
     .table-container{
-      margin:20px;
-      padding-top:8px;
-      border-radius:12px;
+      flex:1;
+      display:flex;
+      justify-content: center;
+      padding: 10px 40px;
+      overflow: hidden; /* tidak bisa scroll */
+    }
+    .table-wrapper {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
     }
 
     table{
@@ -74,15 +77,14 @@
       background:transparent;
     }
     thead th{
-      position:sticky; top:0;
       background: var(--table-header);
-      padding:18px;
-      font-size:28px;
-      font-weight:700;
+      padding: 18px;
+      font-size: 30px;
+      font-weight: 700;
     }
     tbody td{
-      padding:18px;
-      font-size:26px;
+      padding:16px 14px;
+      font-size:28px;
       vertical-align:middle;
     }
 
@@ -97,13 +99,13 @@
 
     /* footer running text */
     .footer-note{
-      margin-top:auto;
-      background: rgba(0,0,0,0.85);
-      color: var(--accent-yellow);
-      font-weight:800;
-      font-size:30px;
-      text-align:center;
-      padding:12px;
+     background: rgba(0,0,0,0.9);
+    color: var(--accent-yellow);
+    font-weight: 800;
+    font-size: 32px;
+    text-align: center;
+    padding: 20px;
+    flex-shrink: 0;
     }
 
   </style>
@@ -284,4 +286,5 @@ setInterval(loadPengumuman,30000);
 </script>
 </body>
 </html>
+
 
