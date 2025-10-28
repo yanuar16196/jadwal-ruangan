@@ -5,107 +5,152 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Jadwal Penggunaan Ruangan - Paroki</title>
   <style>
-    :root{
+    :root {
       --header-bg: #0e4a7a;
-      --header-accent: rgba(255,255,255,0.12);
       --table-header: rgba(2,57,107,0.95);
       --cell-dark: rgba(0,0,0,0.66);
       --cell-dark-2: rgba(0,0,0,0.78);
       --accent-yellow: #ffea00;
+      --font-scale: 1.4;
     }
 
-    html,body{height:100%;margin:0;font-family:"Segoe UI", Roboto, Arial; color:#fff;background:#111;}
-    body{
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Arial;
+      color: #fff;
+      background: #111;
+      font-size: calc(18px * var(--font-scale));
+      overflow: hidden; /* Tidak scroll */
+    }
+
+    body {
       background: url('background.png') no-repeat center center fixed;
       background-size: cover;
-      display:flex;
-      flex-direction:column;
-      min-height:100vh;
-      box-sizing:border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
     }
 
     /* HEADER */
-    header{
+    header {
       background: var(--header-bg);
-      padding:20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       border-radius: 0 0 16px 16px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      flex-shrink: 0;
     }
+
     .left {
-      display:flex; align-items:center; gap:20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
-    .logo{
-      height:100px; width:auto; display:block;
+
+    .logo {
+      height: 100px;
+      width: auto;
+      display: block;
     }
+
     .title {
-      line-height:1.2;
-    }
-    h1{
-      margin:0; font-size:42px; font-weight:800;
-    }
-    .subtitle{ margin:6px 0 0; font-size:20px; color:#d6e7ff; }
-
-    /* clock */
-    #clock{
-      text-align:right;
-      font-weight:700;
-      font-size:28px;
-      min-width:260px;
-      color:#fff;
-    }
-    #clock .date{ font-weight:500; font-size:16px; color:#dbeeff; display:block; margin-top:6px; }
-
-    /* table container */
-    .table-container{
-      margin:20px;
-      padding-top:8px;
-      border-radius:12px;
+      line-height: 1.2;
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      table-layout:fixed;
-      color:#fff;
-      font-size:20px;
-      background:transparent;
+    h1 {
+      margin: 0;
+      font-size: calc(42px * var(--font-scale));
+      font-weight: 800;
     }
-    thead th{
-      position:sticky; top:0;
+
+    .subtitle {
+      margin: 6px 0 0;
+      font-size: calc(20px * var(--font-scale));
+      color: #d6e7ff;
+    }
+
+    /* Clock */
+    #clock {
+      text-align: right;
+      font-weight: 700;
+      font-size: calc(28px * var(--font-scale));
+      color: #fff;
+      min-width: 250px;
+    }
+
+    #clock .date {
+      font-weight: 500;
+      font-size: calc(16px * var(--font-scale));
+      color: #dbeeff;
+      display: block;
+      margin-top: 6px;
+    }
+
+    /* Tabel */
+    .table-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 20px;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+      display: flex;
+    }
+
+    table {
+      width: 100%;
+      height: 100%;
+      border-collapse: collapse;
+      color: #fff;
+      table-layout: fixed;
+      font-size: calc(28px * var(--font-scale)); /* Tulisan besar */
+      text-align: center;
+    }
+
+    thead th {
       background: var(--table-header);
-      padding:14px;
-      font-size:22px;
-      font-weight:700;
-    }
-    tbody td{
-      padding:14px;
-      font-size:20px;
-      vertical-align:middle;
+      padding: 16px;
+      font-weight: 800;
+      font-size: calc(30px * var(--font-scale));
     }
 
-    tbody tr:nth-child(odd) td{ background: var(--cell-dark); }
-    tbody tr:nth-child(even) td{ background: var(--cell-dark-2); }
-
-    .table-wrapper{
-      border-radius:12px;
-      overflow:hidden;
-      box-shadow:0 6px 18px rgba(0,0,0,0.5);
+    tbody td {
+      padding: 18px;
+      vertical-align: middle;
+      font-weight: 500;
+      font-size: calc(28px * var(--font-scale));
     }
 
-    /* footer running text */
-    .footer-note{
-      margin-top:auto;
+    tbody tr:nth-child(odd) td {
+      background: var(--cell-dark);
+    }
+
+    tbody tr:nth-child(even) td {
+      background: var(--cell-dark-2);
+    }
+
+    /* Footer */
+    .footer-note {
       background: rgba(0,0,0,0.85);
       color: var(--accent-yellow);
-      font-weight:800;
-      font-size:24px;
-      text-align:center;
-      padding:12px;
+      font-weight: 800;
+      font-size: calc(30px * var(--font-scale));
+      text-align: center;
+      padding: 20px;
+      border-top: 3px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
     }
-
   </style>
 </head>
 <body>
@@ -134,7 +179,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="6" style="padding:24px;text-align:center">Memuat data...</td></tr>
+          <tr><td colspan="6">Memuat data...</td></tr>
         </tbody>
       </table>
     </div>
@@ -147,64 +192,48 @@
 const urlJadwal = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=0&single=true&output=csv";
 const urlPengumuman = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIcQ-QfZhH-MGrWehxKCo8H-yyq0Ayt2ARrVr-ydGXtQ4xgu97_Rc3qccaquiqWDYO0ywKkWKrWRXi/pub?gid=563346649&single=true&output=csv";
 
-/* Konfigurasi slideshow */
-const rowsPerPage = 10;
-const slideIntervalMs = 8000;
 let jadwalRows = [];
-let currentPage = 0;
-let slideTimer = null;
 
 /* CSV Parser */
 function parseCSV(text){
   const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
-  const out = [];
-  for(const line of lines){
-    const row = [];
-    let cur = "", inQuote=false;
-    for(let j=0;j<line.length;j++){
-      const ch = line[j];
-      if(ch === '"'){
-        if(inQuote && line[j+1] === '"'){ cur += '"'; j++; }
-        else inQuote = !inQuote;
-      } else if(ch === ',' && !inQuote){
-        row.push(cur); cur="";
-      } else cur+=ch;
+  return lines.map(line => {
+    const parts = [];
+    let cur = "", inQuote = false;
+    for(let ch of line){
+      if(ch === '"') inQuote = !inQuote;
+      else if(ch === "," && !inQuote){ parts.push(cur); cur=""; }
+      else cur += ch;
     }
-    row.push(cur);
-    out.push(row);
-  }
-  return out;
+    parts.push(cur);
+    return parts;
+  });
 }
 
 /* Hari dari tanggal */
 function getHariFromDateString(s){
   if(!s) return "";
-  s=s.trim();
-  if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)){
-    const [d,m,y] = s.split("/");
-    const date=new Date(`${y}-${m}-${d}`);
-    if(isNaN(date)) return "";
-    return date.toLocaleDateString("id-ID",{weekday:"long"});
+  s = s.trim();
+  const [d,m,y] = s.split("/");
+  if(y){
+    const date = new Date(`${y}-${m}-${d}`);
+    if(!isNaN(date)) return date.toLocaleDateString("id-ID",{weekday:"long"});
   }
-  const d=new Date(s);
-  if(!isNaN(d)) return d.toLocaleDateString("id-ID",{weekday:"long"});
   return "";
 }
 
-/* Render page */
-function renderPage(pageIndex){
-  const tbody=document.querySelector("#jadwal tbody");
-  if(jadwalRows.length===0){
-    tbody.innerHTML="<tr><td colspan='6' style='padding:20px;text-align:center'>Tidak ada data</td></tr>";
+/* Render tabel */
+function renderTable(){
+  const tbody = document.querySelector("#jadwal tbody");
+  if(jadwalRows.length === 0){
+    tbody.innerHTML = "<tr><td colspan='6'>Tidak ada data</td></tr>";
     return;
   }
-  const start=pageIndex*rowsPerPage;
-  const slice=jadwalRows.slice(start,start+rowsPerPage);
-  let html="";
-  for(const r of slice){
+  let html = "";
+  for(const r of jadwalRows){
     const tanggal=r[0]||"", jam=r[1]||"", acara=r[2]||"", ruang=r[3]||"", pic=r[4]||"";
     const hari=getHariFromDateString(tanggal);
-    html+=`<tr>
+    html += `<tr>
       <td>${tanggal}</td>
       <td>${hari}</td>
       <td>${jam}</td>
@@ -213,74 +242,56 @@ function renderPage(pageIndex){
       <td>${pic}</td>
     </tr>`;
   }
-  tbody.innerHTML=html;
-}
-
-/* Slideshow */
-function startSlideshow(){
-  if(slideTimer){ clearInterval(slideTimer); slideTimer=null; }
-  if(jadwalRows.length<=rowsPerPage){
-    renderPage(0);
-    return;
-  }
-  slideTimer=setInterval(()=>{
-    currentPage++;
-    const totalPages=Math.ceil(jadwalRows.length/rowsPerPage);
-    if(currentPage>=totalPages) currentPage=0;
-    renderPage(currentPage);
-  },slideIntervalMs);
-  currentPage=0; renderPage(0);
+  tbody.innerHTML = html;
 }
 
 /* Load jadwal */
 function loadJadwal(){
-  fetch(urlJadwal).then(r=>r.text()).then(txt=>{
+  fetch(urlJadwal)
+  .then(r=>r.text())
+  .then(txt=>{
     const parsed=parseCSV(txt);
-    if(parsed.length===0){ jadwalRows=[]; startSlideshow(); return; }
-    const first=parsed[0][0]||"";
-    if(!/^\d/.test(first)) parsed.shift();
-    jadwalRows=parsed.filter(r=>r.some(cell=>(cell||"").trim()!==""));
-    startSlideshow();
-  }).catch(err=>{
-    console.error("Error load jadwal:",err);
-    document.querySelector("#jadwal tbody").innerHTML="<tr><td colspan='6' style='text-align:center'>Gagal memuat data</td></tr>";
+    if(parsed.length>0 && !/^\d/.test(parsed[0][0]||"")) parsed.shift();
+    jadwalRows=parsed.filter(r=>r.some(c=>(c||"").trim()!==""));
+    renderTable();
+  })
+  .catch(err=>{
+    console.error(err);
+    document.querySelector("#jadwal tbody").innerHTML="<tr><td colspan='6'>Gagal memuat data</td></tr>";
   });
 }
 
 /* Load pengumuman */
 function loadPengumuman(){
-  fetch(urlPengumuman).then(r=>r.text()).then(txt=>{
+  fetch(urlPengumuman)
+  .then(r=>r.text())
+  .then(txt=>{
     const parsed=parseCSV(txt);
-    let rows=parsed;
-    const first=rows[0]&&rows[0][0]?rows[0][0]:"";
-    if(first && (first.toLowerCase().includes("judul")||first.toLowerCase().includes("pengumuman"))) rows.shift();
-    const texts=rows.map(r=>(r[0]||"").trim()).filter(Boolean);
-    document.getElementById("pengumuman").textContent=texts.length?texts.join(" • "):"Tidak ada pengumuman";
-  }).catch(err=>{
-    console.error("Error pengumuman:",err);
-    document.getElementById("pengumuman").textContent="Gagal memuat pengumuman";
-  });
+    const teks = parsed.map(r=>(r[0]||"").trim()).filter(Boolean).join(" • ");
+    document.getElementById("pengumuman").textContent = teks || "Tidak ada pengumuman";
+  })
+  .catch(()=>document.getElementById("pengumuman").textContent="Gagal memuat pengumuman");
 }
 
-/* Clock */
+/* Jam */
 function startClock(){
   const days=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
   const months=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
   function update(){
     const n=new Date();
-    const t=n.toLocaleTimeString('id-ID',{hour:"2-digit",minute:"2-digit",second:"2-digit"});
-    const dateStr=`${days[n.getDay()]}, ${String(n.getDate()).padStart(2,'0')} ${months[n.getMonth()]} ${n.getFullYear()}`;
-    document.getElementById("clock").innerHTML=`${t}<span class="date">${dateStr}</span>`;
+    const time=n.toLocaleTimeString('id-ID',{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+    const dateStr=`${days[n.getDay()]}, ${n.getDate()} ${months[n.getMonth()]} ${n.getFullYear()}`;
+    document.getElementById("clock").innerHTML=`${time}<span class="date">${dateStr}</span>`;
   }
   update(); setInterval(update,1000);
 }
 
-/* INIT */
+/* Init */
 startClock();
 loadJadwal();
 loadPengumuman();
-setInterval(loadJadwal,30000);   // update setiap 30 detik
-setInterval(loadPengumuman,30000);
+setInterval(loadJadwal,60000);
+setInterval(loadPengumuman,60000);
 </script>
 </body>
 </html>
